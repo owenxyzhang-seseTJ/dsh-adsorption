@@ -49,10 +49,13 @@ def main():
     ap.add_argument("--col-length-m", type=float, default=0.5)
     ap.add_argument("--void-frac", type=float, default=0.4)
     ap.add_argument("--density-kg-m3", type=float, default=1000.0)
-    ap.add_argument("--time-step-s", type=float, default=0.05)
-    ap.add_argument("--n-steps", type=int, default=2000)
+    ap.add_argument("--time-step-s", type=float, default=0.001,
+                    help="时间步 s（默认 0.001；稳定性约束 dt ≤ min(dx/v, dx²/2D_ax)，"
+                         "出现 NaN 时减小 dt 或增大 Ngrid）")
+    ap.add_argument("--n-steps", type=int, default=100000,
+                    help="时间步数（默认 100000 = 100 s；穿透慢时加大）")
     ap.add_argument("--write-every", type=int, default=0,
-                    help="输出时间点数间隔（默认 n_steps//100；不设则 RUPTURA 只返回末步）")
+                    help="输出时间点数间隔（默认 n_steps//100）")
     ap.add_argument("--mtc", type=float, default=0.1, help="传质系数 1/s")
     ap.add_argument("--adc", type=float, default=1e-6, help="轴向弥散 m2/s")
     ap.add_argument("--out-dir", default=".")

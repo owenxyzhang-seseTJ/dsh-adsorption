@@ -70,8 +70,10 @@ const apply = (ctx) => {
             '【穿透曲线模拟（RUPTURA，SI 单位）】',
             '1. RUPTURA 用 Pa、mol/kg；Langmuir 是物理双曲式 q=q_sat·b·P/(1+b·P)，',
             '   与 pyIAST 对数式不同，参数要按 RUPTURA 形式单独拟合。',
-            '2. TimeStep 太大发散 → 减小；NumberOfTimeSteps="auto"。',
-            '3. 出口 C/C0 = data[:, -1, 8 + 6*i]；时间 = data[:, -1, 1] (min)。',
+            '2. 数值稳定：TimeStep 默认 0.001 s（约束 dt ≤ min(dx/v, dx²/2D_ax)），',
+            '   出口出现 NaN 时减小 dt 或增大网格；NumberOfTimeSteps="auto"。',
+            '3. 出口 C/C0 = data[:, -1, 8 + 6*i]（Pnorm 通道）；时间 = data[:, -1, 1] (min)。',
+            '4. 本机已重编译修复官方 wheel 的 use-after-free（compute 返回悬垂指针）。',
         ].join('\n'),
         productivity: [
             '【实测穿透曲线后处理】',

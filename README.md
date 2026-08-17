@@ -59,3 +59,11 @@ Jagiello & Olivier 系列；`.df2/.df3` 二进制经逆向转换，转换器见
 - MIT License（见 LICENSE）。kernel 数据版权归 Micromeritics 所有，发表/商用请自行核对使用条款。
 - 参考文献：pyIAST（*Comput. Phys. Commun.* 200, 364–380, 2016）；pyGAPS（*Adsorption* 25, 1533–1542, 2019）；
   RUPTURA（*Mol. Simul.* 49, 893–953, 2023）；RASPA3（*J. Chem. Phys.* 161, 062501, 2024）。
+
+## 已知修复（本机环境）
+
+- **RUPTURA 1.0.4 wheel 的 use-after-free**：`Breakthrough::compute()` 把返回数组包装到局部
+  `std::vector` 的悬垂指针上（`py::array_t(shape, buffer.data())`），多帧结果不可靠。
+  已用包内 C++ 源码重编译修复（先分配再拷贝，`_ruptura.cpython-312-darwin.so`）。
+- **数值稳定性**：`TimeStep` 需满足 `dt ≤ min(dx/v, dx²/2D_ax)`；实测 dx=0.005 m、D_ax=1e-6 m²/s
+  时 dt 需 ≤0.001 s，否则内部网格点输出 NaN。
