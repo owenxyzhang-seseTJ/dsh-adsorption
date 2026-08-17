@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check-and-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Node 语法与 package.json 校验
+        run: |
+          node --check index.js
+          node -e "const p=require('./package.json'); if(!p.name||!p.main||!p.license) throw new Error('package.json 字段缺失')"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # RUPTURA 1.0.4 无 manylinux wheel（Linux 需源码编译），CI 不安装；
+      # 本机 macOS 环境已用源码重编译修复其 use-after-free（见 README「已知修复」）。
+      - name: 安装计算栈（pyIAST/pyGAPS）
+        run: pip install pyiast pygaps numpy scipy pandas matplotlib openpyxl
+
+      - name: Python 脚本语法检查
+        run: python -m py_compile scripts/*.py
+
+      - name: 冒烟测试（拟合 / IAST / BET / PSD / 穿透产率）
+        run: |
+          python - <<'EOF'
+          import numpy as np, pandas as pd
+          rng = np.random.default_rng(0)
+          P = np.logspace(-3, np.log10(0.9), 40)
+          def dslf(P, M1, K1, M2, K2): return M1*np.log(1+K1*P) + M2*np.log(1+K2*P)
+          pd.DataFrame({"P_bar": P, "n_mmol_g": dslf(P, 6, 3, 2, 50)*(1+rng.normal(0, 0.01, 40))}).to_csv("iso1.csv", index=False)
+          pd.DataFrame({"P_bar": P, "n_mmol_g": dslf(P, 3, 0.5, 1, 10)*(1+rng.normal(0, 0.01, 40))}).to_csv("iso2.csv", index=False)
+          t = np.linspace(0, 120, 1201)
+          c1 = 1/(1+np.exp(-(t-35)/3.0)); c2 = np.clip(1/(1+np.exp(-(t-1)/0.5)), 0, 1)
+          pd.DataFrame({"time_min": t, "CO2_C_C0": c1, "N2_C_C0": c2}).to_csv("bt.csv", index=False)
+          EOF
+          mkdir -p out
+          python scripts/fit_isotherm.py iso1.csv --model DSLF --out-dir out
+          python scripts/iast_selectivity.py iso1.csv iso2.csv --y1 0.15 --p-max-bar 1.0 --n-points 10 --out-dir out
+          python scripts/bet_area.py iso2.csv --temp-k 77 --adsorbate N2 --out-dir out
+          python scripts/psd_from_isotherm.py iso2.csv --temp-k 77 --adsorbate N2 --kernel NLDFT-mod200.csv --out-dir out
+          python scripts/breakthrough_productivity.py bt.csv --time-col time_min --cols CO2_C_C0,N2_C_C0 --feed-fracs 0.15,0.85 --flow-ml-min 20 --mass-g 0.5 --out out/bt_proc.csv
+          test -s out/iso1_fit_params.csv
+          test -s out/iso1_fit_compare.csv
+          test -s out/iast_选择性_vs_压力.csv
+          test -s out/iso2_BET_数据.csv
+          test -s out/iso2_psd_nldft.csv
+          test -s out/bt_proc.csv
+          echo "SMOKE OK"

@@ -1,14 +1,44 @@
 'use strict'
 
 const path = require('path')
+const fs = require('fs')
+const os = require('os')
 const { defineTool } = require('@deepseek-ai/dsh-tools')
 
 const name = 'adsorption'
 const inject = ['tools', 'shell']
 
-// 本机计算栈（固定路径，勿改）
-const PY = '/Users/xiaoyuzhang/miniforge3/envs/pyiast-env/bin/python'
-const RASPA_BIN = '/Users/xiaoyuzhang/.tclaw/runtimes/raspa3-macos/bin/raspa3'
+// ── 计算栈路径解析（无硬编码本机路径）────────────────────────────────────
+// 优先级: 环境变量 DSH_ADSORPTION_PYTHON / DSH_ADSORPTION_RASPA3
+//         → $HOME 下常见安装位置探测 → PATH 探测（RASPA）
+function resolvePython() {
+    const fromEnv = process.env.DSH_ADSORPTION_PYTHON
+    if (fromEnv) return fromEnv
+    const home = os.homedir()
+    const candidates = [
+        home + '/miniforge3/envs/pyiast-env/bin/python',
+        home + '/anaconda3/envs/pyiast-env/bin/python',
+        home + '/miniconda3/envs/pyiast-env/bin/python',
+    ]
+    for (const c of candidates) if (fs.existsSync(c)) return c
+    return candidates[0]  // 回退首个候选；env action 会给出安装指引
+}
+
+function resolveRaspa() {
+    const fromEnv = process.env.DSH_ADSORPTION_RASPA3
+    if (fromEnv) return fromEnv
+    const home = os.homedir()
+    const candidates = [
+        home + '/.tclaw/runtimes/raspa3-macos/bin/raspa3',
+        home + '/raspa3/bin/raspa3',
+        '/usr/local/bin/raspa3',
+    ]
+    for (const c of candidates) if (fs.existsSync(c)) return c
+    return 'raspa3'  // 回退 PATH 命令
+}
+
+const PY = resolvePython()
+const RASPA_BIN = resolveRaspa()
 
 const apply = (ctx) => {
     // 包内资源（scripts/ python 助手 + kernels/ NLDFT kernel 库）
@@ -83,10 +113,11 @@ const apply = (ctx) => {
             '4. 负工作容量 → 解吸窗内 C/C0 未下降，检查时间窗。',
         ].join('\n'),
         raspa3: [
-            '【RASPA3 GCMC（本机 3.1.0）】',
-            '1. 二进制: ' + RASPA_BIN + '；工作目录放 simulation.json 后运行（无此文件报错是预期）。',
-            '2. 每压力点一任务；循环: 初始化≥1e4/平衡≥1e5/采样≥1e5；超胞使截断<最短边一半。',
-            '3. 输出 mol/uc → mmol/g: ×1000/M_uc。',
+            '【RASPA3 GCMC】',
+            '1. 官方仓库与文档: https://github.com/iRASPA/RASPA3（编译安装方法见其 README）。',
+            '2. 二进制由环境变量 DSH_ADSORPTION_RASPA3 或自动探测指定；工作目录放 simulation.json 后运行（无此文件报错是预期）。',
+            '3. 每压力点一任务；循环: 初始化≥1e4/平衡≥1e5/采样≥1e5；超胞使截断<最短边一半。',
+            '4. 输出 mol/uc → mmol/g: ×1000/M_uc。',
         ].join('\n'),
         guardrails: [
             '【科学底线】',

@@ -33,7 +33,7 @@ def fit_dslf(path):
     P = df["P_bar"].to_numpy()
     n = df["n_mmol_g"].to_numpy()
     res = least_squares(lambda th: dslf(P, *th) - n, x0=[5.0, 1.0, 2.0, 100.0],
-                        bounds=([0, 1e-6, 0, 1e-6], [200, 1e6, 200, 1e6]))
+                        bounds=([0, 1e-6, 0, 1e-6], [200, 1e6, 200, 1e6]), max_nfev=20000)
     if not res.success:
         raise SystemExit(f"DSLF 拟合失败 {path}: {res.message}")
     return res.x

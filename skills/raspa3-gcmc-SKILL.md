@@ -7,8 +7,8 @@ description: RASPA3 分子模拟：GCMC 吸附等温线、吸附焓与 Henry 系
 
 ## 本机安装（固定路径，直接使用）
 
-- 主程序：`/Users/xiaoyuzhang/.tclaw/runtimes/raspa3-macos/bin/raspa3`（3.1.0，Mach-O arm64）
-- 辅助工具：`/Users/xiaoyuzhang/.tclaw/runtimes/raspa3-macos/bin/raspa3-cli`（读 CIF，输出框架信息/网格参数）
+- 主程序：`"$DSH_ADSORPTION_RASPA3"（缺省探测 $HOME/.tclaw/runtimes/raspa3-macos、$HOME/raspa3、/usr/local/bin、PATH）`（3.1.0，Mach-O arm64）
+- 辅助工具：`"$DSH_ADSORPTION_RASPA3"（缺省探测 $HOME/.tclaw/runtimes/raspa3-macos、$HOME/raspa3、/usr/local/bin、PATH）-cli`（读 CIF，输出框架信息/网格参数）
 - 运行方式：在某工作目录放好 `simulation.json`，**在该目录下**执行 `raspa3`。
 - 直接运行报 `[Input reader]: File 'simulation.json' not found` 是预期行为（说明需要 simulation.json，不是安装坏了）。
 - 文档与示例：https://github.com/iRASPA/RASPA3（examples/ 目录有完整 simulation.json 样例）

@@ -7,12 +7,12 @@ description: 气体吸附数据计算工作流：纯组分等温线拟合（Lang
 
 ## 计算栈（本机固定路径，直接使用，勿另建环境）
 
-- Python：`/Users/xiaoyuzhang/miniforge3/envs/pyiast-env/bin/python`
+- Python：`"$DSH_ADSORPTION_PYTHON"（缺省自动探测 $HOME 下 miniforge3/anaconda3/miniconda3 的 envs/pyiast-env）`
   - pyiast 1.4.3（IAST / 等温线模型拟合）
   - pygaps 4.6.1（BET / Qst / 等温线处理，函数在 `pygaps.characterisation`）
   - ruptura 1.0.4（穿透曲线模拟）
   - numpy / scipy / pandas / matplotlib / openpyxl / CoolProp
-- 运行：`/Users/xiaoyuzhang/miniforge3/envs/pyiast-env/bin/python script.py` 或 heredoc；**不要**用系统 `python3`（base 环境没有这些包）。
+- 运行：`"$DSH_ADSORPTION_PYTHON"（缺省自动探测 $HOME 下 miniforge3/anaconda3/miniconda3 的 envs/pyiast-env） script.py` 或 heredoc；**不要**用系统 `python3`（base 环境没有这些包）。
 - GCMC 模拟另见 `raspa3-gcmc` skill。
 
 ## 输入数据约定

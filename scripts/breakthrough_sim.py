@@ -29,7 +29,8 @@ def fit_ruptura(path, name):
     q_molkg = df["n_mmol_g"].to_numpy()          # mmol/g = mol/kg
     res = least_squares(lambda th: dslf_hyper(P_pa, *th) - q_molkg,
                         x0=[2.0, 1e-6, 2.0, 1e-8],
-                        bounds=([0, 1e-10, 0, 1e-12], [200, 1e-2, 200, 1e-4]))
+                        bounds=([0, 1e-10, 0, 1e-12], [200, 1e-2, 200, 1e-4]),
+                        max_nfev=20000)
     if not res.success:
         raise SystemExit(f"{name} 双曲 DSLF 拟合失败: {res.message}")
     print(f"{name} 拟合: q1={res.x[0]:.4g} mol/kg b1={res.x[1]:.4g} 1/Pa, "

@@ -55,7 +55,8 @@ def main():
     n = df["n_mmol_g"].to_numpy()
 
     m = MODELS[args.model]
-    res = least_squares(lambda th: m["f"](P, *th) - n, x0=m["x0"], bounds=(m["lo"], m["hi"]))
+    res = least_squares(lambda th: m["f"](P, *th) - n, x0=m["x0"], bounds=(m["lo"], m["hi"]),
+                        max_nfev=20000)
     if not res.success:
         raise SystemExit(f"拟合未收敛: {res.message}")
     params = dict(zip(m["names"], res.x))
