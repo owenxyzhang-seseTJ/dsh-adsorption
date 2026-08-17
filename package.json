@@ -1,0 +1,10 @@
+{
+  "name": "dsh-adsorption",
+  "version": "1.0.0",
+  "description": "气体吸附数据计算工作台（pyIAST/pyGAPS/RUPTURA/RASPA3）：等温线拟合、IAST 选择性、BET、Qst、NLDFT 孔径分布（48 个 Micromeritics kernel）、穿透曲线模拟与实测产率计算 — 持久宿主插件",
+  "main": "index.js",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  }
+}
