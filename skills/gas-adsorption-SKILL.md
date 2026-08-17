@@ -206,12 +206,12 @@ c_c0_i = data[:, -1, 8 + 6*i]       # 组分 i 的出口 C/C0
 - **比表面积多方法互证**：BET（工作流 C，Rouquerol 判据）、Langmuir 面积、t-plot 外比表面积、DR/DA 微孔体积。
 - **NLDFT/QSDFT kernel 选择四要素**：吸附质（N2/Ar/CO2/O2…）+ 温度（77/87/273 K）+ 孔型（slit/cylinder/sphere）+ 表面化学（carbon/oxide/zeolite/MOF）必须与样品匹配，不匹配的 kernel 结果不可发表。
 - **kernel 库（本 skill `kernels/` 目录，48 个，全部经 pyGAPS psd_dft 验证）**：
-  - **N2 @ 77K**：`NLDFT-mod200.csv`（carbon slit，首选）、`2D-NLDFT-mod201/202/206.csv`（carbon 有限 slit，Aspect=4/6/12）、`2D-NLDFT-mod255.csv`（carbon 异质表面 HS-2D-NLDFT）、`NLDFT-mod225/226.csv`（carbon 圆柱 SWNT/MWNT）、`2D-NLDFT-mod440.csv`（ZTC 圆柱）、`2D-NLDFT-mod450.csv`（carbon 圆柱介孔）、`NLDFT-mod010/013.csv`（oxide 圆柱，强势/Tarazona）、`Hybrid-Density-Functional-Theory-mod014.csv`（柱撑黏土圆柱）
-  - **Ar @ 87K**：`NLDFT-mod203.csv`（carbon slit，首选）、`2D-NLDFT-mod204/205/207.csv`（carbon 有限 slit As=4/6/12）、`2D-NLDFT-mod420.csv`（carbon 异质表面）、`NLDFT-mod227/228.csv`（carbon 圆柱 SWNT/MWNT）、`Hybrid-NL-Density-Functional-Theory-mod015.csv`（oxide 圆柱）、`NLDFT-mod251/252.csv`（zeolite H/Me 型）、`2D-NLDFT-mod610.csv`（oxide 圆柱 HS-2D）
-  - **CO2 @ 273K**：`NLDFT-mod400.csv`（carbon slit，首选，P/P0 ≤ 0.3）、`2D-NLDFT-mod425.csv`（carbon 异质表面）、`NLDFT-mod250.csv`（carbon slit 10 atm）、`GCMC-mod241.csv`（GCMC 碳 slit，仅微孔 0.32–1.5 nm，噪声大）、`NLDFT-mod011.csv`（原始 DFT，**P/P0 ≤ 0.039**，仅超微孔段）
+  - **N2 @ 77K**：`N2-77K-carbon-slit-NLDFT-mod200.csv`（carbon slit，首选）、`2D-NLDFT-mod201/202/206.csv`（carbon 有限 slit，Aspect=4/6/12）、`N2-77K-carbon-HS-2D-NLDFT-mod255.csv`（carbon 异质表面 HS-2D-NLDFT）、`NLDFT-mod225/226.csv`（carbon 圆柱 SWNT/MWNT）、`N2-77K-carbon-ZTC-cylinder-2D-NLDFT-mod440.csv`（ZTC 圆柱）、`N2-77K-carbon-cylinder-meso-2D-NLDFT-mod450.csv`（carbon 圆柱介孔）、`NLDFT-mod010/013.csv`（oxide 圆柱，强势/Tarazona）、`N2-77K-clay-cylinder-NLDFT-mod014.csv`（柱撑黏土圆柱）
+  - **Ar @ 87K**：`Ar-87K-carbon-slit-NLDFT-mod203.csv`（carbon slit，首选）、`2D-NLDFT-mod204/205/207.csv`（carbon 有限 slit As=4/6/12）、`Ar-87K-carbon-HS-2D-NLDFT-mod420.csv`（carbon 异质表面）、`NLDFT-mod227/228.csv`（carbon 圆柱 SWNT/MWNT）、`Ar-87K-oxide-cylinder-NLDFT-mod015.csv`（oxide 圆柱）、`NLDFT-mod251/252.csv`（zeolite H/Me 型）、`Ar-87K-oxide-cylinder-HS-2D-NLDFT-mod610.csv`（oxide 圆柱 HS-2D）
+  - **CO2 @ 273K**：`CO2-273K-carbon-slit-NLDFT-mod400.csv`（carbon slit，首选，P/P0 ≤ 0.3）、`CO2-273K-carbon-HS-2D-NLDFT-mod425.csv`（carbon 异质表面）、`CO2-273K-carbon-slit-10atm-NLDFT-mod250.csv`（carbon slit 10 atm）、`CO2-273K-carbon-slit-GCMC-mod241.csv`（GCMC 碳 slit，仅微孔 0.32–1.5 nm，噪声大）、`CO2-273K-carbon-slit-DFT-mod011.csv`（原始 DFT，**P/P0 ≤ 0.039**，仅超微孔段）
   - 来源：Micromeritics DFT 模型库（Jagiello & Olivier 系）逆向转换，原包与转换脚本在 `~/Documents/单晶/plugin/kernels-package/`（`output/manifest.json` 有每个 kernel 的维度/范围/单调性）。值单位 mmol/g（按孔容类归一，饱和≈液态密度），压力轴为相对压力。
-  - 注意：`2D-NLDFT-mod255.csv` 原始文件含重复压力行，已修复（重复行取均值）；`NLDFT-mod225/226/227/228` 压力轴到 1.05。
-  - 用法：`--kernel NLDFT-mod203.csv`（脚本自动在 `kernels/` 目录查找）。
+  - 注意：`N2-77K-carbon-HS-2D-NLDFT-mod255.csv` 原始文件含重复压力行，已修复（重复行取均值）；`NLDFT-mod225/226/227/228` 压力轴到 1.05。
+  - 用法：`--kernel Ar-87K-carbon-slit-NLDFT-mod203.csv`（脚本自动在 `kernels/` 目录查找）。
   - **CIF 不能直接生成 DFT kernel**：kernel 是预计算的 DFT/GCMC 数据表，pyGAPS 只消费不生产；CIF 的作用是判断孔型/化学以选 kernel。无现成 kernel 时：① 联网搜索已发表 kernel 数据表（Jagiello & Olivier 2D-NLDFT 论文 SI，如 Carbon 91 (2015) 330–337；Carbon 144 (2019) 206–215）；② 仪器软件（MicroActive/BELSORP）导出；③ RASPA3 GCMC 在模型孔（slit/cyl）中自算「模拟 kernel」（研究级路线）。
 - 交付：三件套（processed CSV + PNG + md 报告），报告中必须给出 kernel 名称/来源、P0 与换算、压力范围、孔径范围与判据。
 

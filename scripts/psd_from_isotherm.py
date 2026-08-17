@@ -10,9 +10,9 @@
 
   # 自定义 kernel（本 skill kernels/ 目录内置 48 个，按文件名直接用；见 SKILL.md 工作流 G 的库清单）
   psd_from_isotherm.py standard_Ar_87K.csv --temp-k 87 --adsorbate Ar \
-      --kernel NLDFT-mod203.csv --out-dir psd_results
+      --kernel Ar-87K-carbon-slit-NLDFT-mod203.csv --out-dir psd_results
   psd_from_isotherm.py standard_CO2_273K.csv --temp-k 273 --adsorbate CO2 \
-      --kernel NLDFT-mod400.csv --out-dir psd_results
+      --kernel CO2-273K-carbon-slit-NLDFT-mod400.csv --out-dir psd_results
 
   # 附加 HK 微孔与 BJH 介孔
   psd_from_isotherm.py standard_N2_77K.csv --temp-k 77 --adsorbate N2 \

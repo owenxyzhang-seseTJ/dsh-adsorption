@@ -45,7 +45,7 @@ jobs:
           python scripts/fit_isotherm.py iso1.csv --model DSLF --out-dir out
           python scripts/iast_selectivity.py iso1.csv iso2.csv --y1 0.15 --p-max-bar 1.0 --n-points 10 --out-dir out
           python scripts/bet_area.py iso2.csv --temp-k 77 --adsorbate N2 --out-dir out
-          python scripts/psd_from_isotherm.py iso2.csv --temp-k 77 --adsorbate N2 --kernel NLDFT-mod200.csv --out-dir out
+          python scripts/psd_from_isotherm.py iso2.csv --temp-k 77 --adsorbate N2 --kernel N2-77K-carbon-slit-NLDFT-mod200.csv --out-dir out
           python scripts/breakthrough_productivity.py bt.csv --time-col time_min --cols CO2_C_C0,N2_C_C0 --feed-fracs 0.15,0.85 --flow-ml-min 20 --mass-g 0.5 --out out/bt_proc.csv
           test -s out/iso1_fit_params.csv
           test -s out/iso1_fit_compare.csv

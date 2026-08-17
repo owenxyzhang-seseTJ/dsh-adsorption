@@ -92,7 +92,7 @@ const apply = (ctx) => {
             '   CO2 273K=34.85 bar，不确定必须问用户）。',
             '2. kernel 选择四要素：吸附质+温度+孔型(slit/cyl/有限孔)+表面化学(carbon/oxide/zeolite)必须匹配。',
             '3. 库内 48 个 kernel（Micromeritics 逆向转换，manifest 见包内 kernels/README）：',
-            '   N2 77K 首选 NLDFT-mod200.csv；Ar 87K 首选 NLDFT-mod203.csv；CO2 273K 首选 NLDFT-mod400.csv。',
+            '   N2 77K 首选 N2-77K-carbon-slit-NLDFT-mod200.csv；Ar 87K 首选 Ar-87K-carbon-slit-NLDFT-mod203.csv；CO2 273K 首选 CO2-273K-carbon-slit-NLDFT-mod400.csv。',
             '4. CO2 273K 的 kernel 压力轴 ≤0.3（mod011 仅 ≤0.039，只用于超微孔段）。',
             '5. CIF 不能直接生成 kernel；无匹配 kernel 时联网搜已发表 kernel 表或 RASPA3 GCMC 自算。',
         ].join('\n'),
@@ -269,7 +269,7 @@ const apply = (ctx) => {
                 case 'psd': {
                     const r = await pyRun('psd_from_isotherm.py', [
                         input, '--temp-k', args.temp_k || '77', '--adsorbate', args.adsorbate || 'N2',
-                        '--kernel', args.kernel || 'NLDFT-mod200.csv',
+                        '--kernel', args.kernel || 'N2-77K-carbon-slit-NLDFT-mod200.csv',
                         '--p0-bar', args.p0_bar,
                         '--hk', args.hk, '--bjh', args.bjh, '--t-plot', args.t_plot,
                         '--out-dir', args.out_dir || workdir,
@@ -329,7 +329,7 @@ const apply = (ctx) => {
             'iast=二元 IAST 选择性（input_path=组分1 标准 CSV，second_isotherm=组分2；y1=进料摩尔分数；解析铺展压力求解）；' +
             'bet=BET 比表面积（temp_k/adsorbate/p_limits；Rouquerol 判据必报）；' +
             'qst=等量吸附热（input_path=多温度标准 CSV 目录或逗号分隔文件列表；loading_points）；' +
-            'psd=NLDFT 孔径分布（temp_k/adsorbate/kernel；kernel 取 kernels/ 内文件名，N2 77K 默认 NLDFT-mod200.csv，Ar 87K 用 NLDFT-mod203.csv，CO2 273K 用 NLDFT-mod400.csv；p0_bar 压力换算；--hk/--bjh/--t-plot 附加方法）；' +
+            'psd=NLDFT 孔径分布（temp_k/adsorbate/kernel；kernel 取 kernels/ 内文件名，N2 77K 默认 N2-77K-carbon-slit-NLDFT-mod200.csv，Ar 87K 用 Ar-87K-carbon-slit-NLDFT-mod203.csv，CO2 273K 用 CO2-273K-carbon-slit-NLDFT-mod400.csv；p0_bar 压力换算；--hk/--bjh/--t-plot 附加方法）；' +
             'breakthrough=RUPTURA 穿透曲线模拟（input_path/second_isotherm=等温线 CSV；y1/temp_k/pressure_bar/col_length_m/void_frac/density_kg_m3/time_step_s/n_steps）；' +
             'productivity=实测穿透曲线产率计算（input_path=time_min+各组分_C_C0 列 CSV；cols/feed_fracs/flow_ml_min/mass_g/desorb-from/desorb-to/bt-frac）。' +
             '交付规范：可画图 CSV + PNG + md/txt 报告；图仅 PNG（scientific-figure-team）。' +
@@ -351,7 +351,7 @@ const apply = (ctx) => {
             n_points: { type: 'string', description: 'iast: 扫压点数（默认 30）' },
             p_limits: { type: 'string', description: 'bet: P/P0 区间 "0.01,0.30"' },
             loading_points: { type: 'string', description: 'qst: 吸附量点列表 "0.5,1,2,3,5"' },
-            kernel: { type: 'string', description: 'psd: kernels/ 内 kernel 文件名（默认 NLDFT-mod200.csv）' },
+            kernel: { type: 'string', description: 'psd: kernels/ 内 kernel 文件名（默认 N2-77K-carbon-slit-NLDFT-mod200.csv）' },
             p0_bar: { type: 'string', description: 'psd: 饱和蒸气压 bar（默认 N2 77K=1.0 / Ar 87K=1.0 / CO2 273K=34.85）' },
             hk: { type: 'string', description: 'psd: 附加 HK 微孔（传 "1"）' },
             bjh: { type: 'string', description: 'psd: 附加 BJH 介孔（传 "1"）' },

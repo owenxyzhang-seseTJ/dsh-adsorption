@@ -81,9 +81,9 @@ use-after-free。常用选项：`--no-ruptura-patch` 跳过修补、`--env <name
 Jagiello & Olivier 系列；`.df2/.df3` 二进制经逆向转换，转换器与逆向笔记见
 [kernels-package](https://github.com/owenxyzhang-seseTJ/dsh-adsorption/tree/main/kernels) 说明）。
 
-- N2 @ 77K 首选 `NLDFT-mod200.csv`（carbon slit）；另有有限 slit As=4/6/12、异质表面 HS-2D-NLDFT、SWNT/MWNT 圆柱、ZTC、oxide 圆柱、柱撑黏土圆柱
-- Ar @ 87K 首选 `NLDFT-mod203.csv`；另有有限 slit、异质表面、SWNT/MWNT 圆柱、oxide 圆柱、zeolite H/Me 型
-- CO2 @ 273K 首选 `NLDFT-mod400.csv`（P/P0 ≤ 0.3）；另有异质表面、10 atm、GCMC 微孔、原始 DFT 超微孔（mod011，P/P0 ≤ 0.039）
+- N2 @ 77K 首选 `N2-77K-carbon-slit-NLDFT-mod200.csv`（carbon slit）；另有有限 slit As=4/6/12、异质表面 HS-2D-NLDFT、SWNT/MWNT 圆柱、ZTC、oxide 圆柱、柱撑黏土圆柱
+- Ar @ 87K 首选 `Ar-87K-carbon-slit-NLDFT-mod203.csv`；另有有限 slit、异质表面、SWNT/MWNT 圆柱、oxide 圆柱、zeolite H/Me 型
+- CO2 @ 273K 首选 `CO2-273K-carbon-slit-NLDFT-mod400.csv`（P/P0 ≤ 0.3）；另有异质表面、10 atm、GCMC 微孔、原始 DFT 超微孔（mod011，P/P0 ≤ 0.039）
 
 ## 已知修复（本机环境）
 
